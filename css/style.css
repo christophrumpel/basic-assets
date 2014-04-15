@@ -1,2 +1,4 @@
 body {
-  color: yellow; }
+  color: yellow;
+  -webkit-transition: 0.5s all;
+  transition: 0.5s all; }

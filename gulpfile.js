@@ -5,6 +5,7 @@ var rename 		= require("gulp-rename");
 var concat 		= require('gulp-concat');
 var uglify 		= require('gulp-uglify');
 var imagemin    = require('gulp-imagemin');
+var prefix      = require('gulp-autoprefixer');
 
 var paths = {
     sass: './sass',
@@ -19,6 +20,7 @@ var paths = {
 gulp.task('styles', function () {
     gulp.src(paths.styles)
         .pipe(sass())
+        .pipe(prefix("last 1 version", "> 1%", "ie 8", "ie 7"))
         .pipe(gulp.dest(paths.css))
         .pipe(minifyCSS())
         .pipe(rename('style.min.css'))
