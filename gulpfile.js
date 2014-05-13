@@ -4,7 +4,7 @@ var minifyCSS 	= require('gulp-minify-css');
 var rename 		= require("gulp-rename");
 var concat 		= require('gulp-concat');
 var uglify 		= require('gulp-uglify');
-var imagemin    = require('gulp-imagemin');
+var imageop     = require('gulp-image-optimization');
 var prefix      = require('gulp-autoprefixer');
 
 var paths = {
@@ -33,10 +33,13 @@ gulp.task('styles', function () {
 //     	.pipe(gulp.dest('./scripts/'))
 // });
 
-gulp.task('images', function () {
-    gulp.src(paths.origimages + '/**/*')
-        .pipe(imagemin())
-        .pipe(gulp.dest(paths.images));
+gulp.task('images', function (cb) {
+    gulp.src(paths.origimages + '/*')
+        .pipe(imageop({
+            optimizationLevel: 5,
+            progressive: true,
+            interlaced: true
+        })).pipe(gulp.dest(paths.images)).on('end', cb).on('error', cb);
 });
 
 // Rerun the task when a file changes
