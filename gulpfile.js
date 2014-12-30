@@ -7,6 +7,7 @@ var uglify 		= require('gulp-uglify');
 var imagemin    = require('gulp-imagemin');
 var pngquant    = require('imagemin-pngquant');
 var prefix      = require('gulp-autoprefixer');
+var connect     = require('gulp-connect');
 
 var paths = {
     sass: './sass',
@@ -25,13 +26,19 @@ gulp.task('styles', function () {
         .pipe(gulp.dest(paths.css))
         .pipe(minifyCSS())
         .pipe(rename('style.min.css'))
-        .pipe(gulp.dest(paths.css));
+        .pipe(gulp.dest(paths.css))
+        .pipe(connect.reload());
 });
 
 // gulp.task('scripts', function() {
-//  	gulp.src(['./scripts'])
-//     	.pipe(concat('all.js'))
-//     	.pipe(gulp.dest('./scripts/'))
+//     gulp.src([
+//         paths.scripts + '/vendor/jquery-1.11.1.min.js',
+//         paths.scripts + '/modules/*.js'])
+//         .pipe(concat('main.js'))
+//         .pipe(gulp.dest(paths.scripts))
+//         .pipe(uglify())
+//         .pipe(concat('main.min.js'))
+//         .pipe(gulp.dest(paths.scripts))
 // });
 
 gulp.task('images', function () {
@@ -44,10 +51,22 @@ gulp.task('images', function () {
         .pipe(gulp.dest('images/'));
 });
 
+gulp.task('connect', function() {
+  connect.server({
+        root: [__dirname],
+        livereload: true
+  });
+});
+
+gulp.task('html', function () {
+    gulp.src('./*.html')
+    .pipe(connect.reload());
+});
+
 // Rerun the task when a file changes
 gulp.task('watch', function() {
     gulp.watch(paths.sass + '/**/*', ['styles']);
     gulp.watch(paths.origimages + '/**/*', ['images']);
 });
 
-gulp.task('default', ['styles', 'images', 'watch']);
+gulp.task('default', ['styles', 'images', 'connect', 'watch']);
